@@ -1,0 +1,72 @@
+int ledPin = 13;                // choose the pin for the LED A
+int inputPinA = 4;               // choose the input pin (for PIR sensor A)
+int pirStateA = HIGH;             // we start, assuming no motion detected by A
+int valA = 0;                    // variable for reading the pin status for A
+
+int inputPinB = 7;               // choose the input pin (for PIR sensor B)
+int pirStateB = HIGH;             // we start, assuming no motion detected by B
+int valB = 0;                    // variable for reading the pin status for B
+
+int count = 0;
+
+void setup() {
+pinMode(ledPin, OUTPUT);      // declare LED as output
+pinMode(inputPinA, INPUT);     // declare sensor as input
+pinMode(inputPinB, INPUT);     // declare sensor as input
+
+Serial.begin(9600);
+
+}
+void loop() {
+/// Program for sensor A///
+valA = digitalRead(inputPinA);  // read input value
+  if (valA == HIGH) {            // check if the input is HIGH
+digitalWrite(ledPin, HIGH);
+    if (pirStateA == LOW) {
+Serial.println("People Have Entered");
+       count ++;
+Serial.println("Number of people:");
+Serial.println(count);
+      // we have just turned on
+      // We only want to print on the output change, not state
+pirStateA = HIGH;
+    }
+  } 
+   else {
+    //digitalWrite(ledPin, LOW); // now led remain on
+    if (pirStateA == HIGH){
+      // we have just turned of
+Serial.println(" A Sensor ended!");
+
+      // We only want to print on the output change, not state
+pirStateA = LOW;
+    }
+  }
+///Program for sensor B ///
+valB = digitalRead(inputPinB);  // read input value
+  if (valB == HIGH) {            // check if the input is HIGH
+    if (pirStateB == LOW) {
+Serial.println("People Left");
+       count -- ;
+Serial.println("Number of people remained:");
+Serial.println(count);
+      // we have just turned on
+      // We only want to print on the output change, not state
+pirStateB = HIGH;
+    }
+  } 
+
+   else {
+    if (pirStateB == HIGH){
+      // we have just turned of
+Serial.println(" B Sensor ended!");
+pirStateB = LOW;
+    }
+  }
+///Program Counter///
+ if (count <= 0)
+ {digitalWrite(ledPin, LOW);}
+ else{
+digitalWrite(ledPin, HIGH);
+}
+ }
